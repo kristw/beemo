@@ -83,7 +83,7 @@ export default class ExecuteDriverRoutine extends Routine<DriverContext, BeemoTo
       };
     }
 
-    const packages: { [name: string]: WorkspacePackageConfig } = {};
+    const packages: { [name: string]: WorkspacePackageConfig & { priority?: number } } = {};
     const depCounts: { [name: string]: { count: number; package: WorkspacePackageConfig } } = {};
 
     function countDep(name: string) {
@@ -102,7 +102,7 @@ export default class ExecuteDriverRoutine extends Routine<DriverContext, BeemoTo
       packages[pkg.name] = pkg;
 
       // Count it immediately, as it may not be dependend on
-      if (pkg.priority) {
+      if ((pkg as any).priority) {
         countDep(pkg.name);
       }
     });

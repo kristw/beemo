@@ -4,18 +4,57 @@
  */
 
 import path from 'path';
-import { ModuleLoader, Routine } from '@boost/core';
-import parseArgs from 'yargs-parser';
+import { ModuleLoader, Routine, AggregatedResponse, WorkspacePackageConfig } from '@boost/core';
 import Script from './Script';
 import ScriptContext from './contexts/ScriptContext';
-import { BeemoTool, Execution } from './types';
+import RunScriptRoutine from './execute/RunScriptRoutine';
+import isPatternMatch from './utils/isPatternMatch';
+import { BeemoTool } from './types';
 
 export default class ExecuteScriptRoutine extends Routine<ScriptContext, BeemoTool> {
-  async execute(context: ScriptContext): Promise<Execution> {
-    this.task(this.tool.msg('app:scriptLoad'), this.loadScript);
-    this.task(this.tool.msg('app:scriptRun'), this.runScript);
+  workspacePackages: WorkspacePackageConfig[] = [];
 
-    return this.serializeTasks();
+  bootstrap() {
+    const { argv, args, eventName, workspaceRoot, workspaces } = this.context;
+    const command = argv.join(' ');
+
+    if (args.workspaces) {
+      if (!workspaces || workspaces.length === 0) {
+        throw new Error(
+          this.tool.msg('errors:driverWorkspacesNotEnabled', { arg: args.workspaces }),
+        );
+      }
+
+      this.workspacePackages = this.tool.loadWorkspacePackages({ root: workspaceRoot });
+
+      this.getFilteredWorkspacePackages().forEach(pkg => {
+        this.pipe(
+          new RunScriptRoutine(pkg.workspace.packageName, command, {
+            packageRoot: pkg.workspace.packagePath,
+          }),
+        );
+      });
+    } else {
+      this.pipe(new RunScriptRoutine(eventName, command));
+    }
+  }
+
+  execute(context: ScriptContext): Promise<AggregatedResponse> {
+    const concurrency = context.args.concurrency || this.tool.config.execute.concurrency;
+
+    this.task(this.tool.msg('app:scriptLoad'), this.loadScript);
+
+    return this.serializeTasks().then(script => this.poolRoutines(script, { concurrency }));
+  }
+
+  /**
+   * Return a list of workspaces optionally filtered.
+   */
+  getFilteredWorkspacePackages(): WorkspacePackageConfig[] {
+    return this.workspacePackages.filter(pkg =>
+      // @ts-ignore Contains not typed yet
+      isPatternMatch(pkg.name, this.context.args.workspaces, { contains: true }),
+    );
   }
 
   /**
@@ -28,44 +67,12 @@ export default class ExecuteScriptRoutine extends Routine<ScriptContext, BeemoTo
     this.debug('Loading script');
 
     const script = loader.importModule(filePath, [
-      context.scriptName,
+      context.eventName, // Use kebab form
       this.tool.msg('app:scriptRunNamed', { name: context.scriptName }),
     ]);
-
-    // Pass context and tool to script
-    script.configure(this);
-
-    // Set script into context
-    context.setScript(script, filePath);
 
     this.tool.emit(`${context.eventName}.load-script`, [context, script]);
 
     return script;
-  }
-
-  /**
-   * Run the script while also parsing arguments to use as options.
-   */
-  async runScript(context: ScriptContext, script: Script): Promise<Execution> {
-    const { argv } = this.context;
-
-    this.debug('Executing script with args "%s"', argv.join(' '));
-
-    this.tool.emit(`${context.eventName}.before-execute`, [context, argv, script]);
-
-    const args = parseArgs(argv, script.args());
-    let result = null;
-
-    try {
-      result = await script.execute(context, args);
-
-      this.tool.emit(`${context.eventName}.after-execute`, [context, result, script]);
-    } catch (error) {
-      this.tool.emit(`${context.eventName}.failed-execute`, [context, error, script]);
-
-      throw error;
-    }
-
-    return result;
   }
 }

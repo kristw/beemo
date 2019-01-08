@@ -5,6 +5,7 @@
 
 /* eslint-disable no-console */
 
+import os from 'os';
 import path from 'path';
 import chalk from 'chalk';
 import yargs from 'yargs';
@@ -21,6 +22,7 @@ const beemo = new Beemo(main.slice(1), binName);
 const { tool } = beemo;
 const app = yargs(main) as any; // TEMP as yargs types are broken
 const manualURL = process.env.BEEMO_MANUAL_URL || 'https://milesj.gitbook.io/beemo';
+const concurrency = os.cpus().length;
 
 // Bootstrap the module
 beemo.bootstrapConfigModule();
@@ -38,6 +40,7 @@ tool.getPlugins('driver').forEach(driver => {
     {
       ...command,
       concurrency: {
+        default: concurrency,
         description: tool.msg('app:cliOptionConcurrency'),
         number: true,
       },
@@ -67,6 +70,7 @@ app.command(
   tool.msg('app:cliCommandRunScript'),
   {
     concurrency: {
+      default: concurrency,
       description: tool.msg('app:cliOptionConcurrency'),
       number: true,
     },
