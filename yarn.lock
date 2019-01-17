@@ -1476,10 +1476,10 @@
     libnpm "^2.0.1"
     write-file-atomic "^2.3.0"
 
-"@milesj/build-tool-config@0.139.0":
-  version "0.139.0"
-  resolved "https://registry.npmjs.org/@milesj/build-tool-config/-/build-tool-config-0.139.0.tgz#4940147f1213d41a40210030b7e99c8024537fd3"
-  integrity sha512-74noRzxFJCJux2QQTIFTGmpASTtob6TL23H/9Idm5rZ7v9USaCnyGcY41TyyPp2qjZtFqCrRDabT7qmaOTdTJA==
+"@milesj/build-tool-config@0.139.1":
+  version "0.139.1"
+  resolved "https://registry.npmjs.org/@milesj/build-tool-config/-/build-tool-config-0.139.1.tgz#ea578b164248ae169145ebfc00e220e7fd981979"
+  integrity sha512-wYBNGx4U0oyFa43Q3K7LwoLFRFsy8PB1+rDlWM3E9sByAmxSv8v4M9kEjrZ0LwTR/frwjp7bJOf5hw3FjoUkng==
   dependencies:
     "@babel/cli" "^7.2.3"
     "@babel/core" "^7.2.2"
@@ -1501,7 +1501,7 @@
     enzyme-to-json "^3.3.5"
     eslint "^5.12.0"
     eslint-config-airbnb "^17.1.0"
-    eslint-config-prettier "^3.3.0"
+    eslint-config-prettier "^3.4.0"
     eslint-plugin-babel "^5.3.0"
     eslint-plugin-compat "^2.6.3"
     eslint-plugin-import "^2.14.0"
@@ -1740,10 +1740,10 @@
   dependencies:
     source-map "^0.6.1"
 
-"@types/webpack@^4.4.22":
-  version "4.4.22"
-  resolved "https://registry.npmjs.org/@types/webpack/-/webpack-4.4.22.tgz#c4a5ea8b74a31b579537515bcfe86d2b2a34382c"
-  integrity sha512-PxAAzli3krZX9rCeONSR5Z9v4CR/2HPsKsiVRFNDo9OZefN+dTemteMHZnYkddOu4bqoYqJTJ724gLy0ZySXOw==
+"@types/webpack@^4.4.23":
+  version "4.4.23"
+  resolved "https://registry.npmjs.org/@types/webpack/-/webpack-4.4.23.tgz#059d6f4598cfd65ddee0e2db38317ef989696712"
+  integrity sha512-WswyG+2mRg0ul/ytPpCSWo+kOlVVPW/fKCBEVwqmPVC/2ffWEwhsCEQgnFbWDf8EWId2qGcpL623EjLfNTRk9A==
   dependencies:
     "@types/anymatch" "*"
     "@types/node" "*"
@@ -3959,10 +3959,10 @@ eslint-config-airbnb@^17.1.0:
     object.assign "^4.1.0"
     object.entries "^1.0.4"
 
-eslint-config-prettier@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/eslint-config-prettier/-/eslint-config-prettier-3.3.0.tgz#41afc8d3b852e757f06274ed6c44ca16f939a57d"
-  integrity sha512-Bc3bh5bAcKNvs3HOpSi6EfGA2IIp7EzWcg2tS4vP7stnXu/J1opihHDM7jI9JCIckyIDTgZLSWn7J3HY0j2JfA==
+eslint-config-prettier@^3.4.0:
+  version "3.5.0"
+  resolved "https://registry.npmjs.org/eslint-config-prettier/-/eslint-config-prettier-3.5.0.tgz#fb29575c5be7ed79c1637c5a0c58985833290805"
+  integrity sha512-LcZEoAY5lL3/H2NTFSeUl/z8X8oMea1IxLEIb5uDbRxPTdQeeT7oGpRWT6UwHXGcoRbYH0TZmfRsh8iXbpyW7A==
   dependencies:
     get-stdin "^6.0.0"
 
